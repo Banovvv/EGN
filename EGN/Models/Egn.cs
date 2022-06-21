@@ -39,7 +39,7 @@ namespace EGN.Models
             new Region("Друг", 926, 999)
         };
 
-        public string? Generate(DateTime birthDate, string city, bool isMale)
+        public string Generate(DateTime birthDate, string city, bool isMale)
         {
             if (birthDate.Year < 1800 || birthDate.Year > 2099)
             {
@@ -52,6 +52,31 @@ namespace EGN.Models
             }
 
             string[] egn = new string[10];
+
+            egn[0] = birthDate.Year.ToString().Substring(2, 1);
+            egn[1] = birthDate.Year.ToString().Substring(3, 1);
+
+            if(birthDate.Month.ToString().Length == 1)
+            {
+                egn[2] = "0";
+                egn[3] = birthDate.Month.ToString();
+            }
+            else
+            {
+                egn[2] = birthDate.Month.ToString().Substring(0, 1);
+                egn[3] = birthDate.Month.ToString().Substring(1, 1);
+            }
+
+            if (birthDate.Day.ToString().Length == 1)
+            {
+                egn[4] = "0";
+                egn[5] = birthDate.Day.ToString();
+            }
+            else
+            {
+                egn[4] = birthDate.Day.ToString().Substring(0, 1);
+                egn[5] = birthDate.Day.ToString().Substring(1, 1);
+            }
 
             return egn.ToString();
         }
