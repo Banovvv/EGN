@@ -92,8 +92,8 @@ namespace EGN.Models
                 else
                 {
                     egn[6] = (currentCity.StartValue + positionBorn * 2).ToString().Substring(0, 1);
-                    egn[7] = (currentCity.StartValue + positionBorn * 2).Substring(1, 1);
-                    egn[8] = (currentCity.StartValue + positionBorn * 2).Substring(2, 1);
+                    egn[7] = (currentCity.StartValue + positionBorn * 2).ToString().Substring(1, 1);
+                    egn[8] = (currentCity.StartValue + positionBorn * 2).ToString().Substring(2, 1);
                 }
             }
 
