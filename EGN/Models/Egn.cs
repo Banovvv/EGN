@@ -5,6 +5,7 @@ namespace EGN.Models
 {
     public class Egn : IValidator, IGenerator
     {
+        private readonly int positionBorn = 1;
         private readonly int[] _weights = new int[] { 2, 4, 8, 5, 10, 9, 7, 3, 6 };
         private readonly IEnumerable<Region> _regions = new List<Region>()
         {
@@ -76,6 +77,24 @@ namespace EGN.Models
             {
                 egn[4] = birthDate.Day.ToString().Substring(0, 1);
                 egn[5] = birthDate.Day.ToString().Substring(1, 1);
+            }
+
+            Region currentCity = _regions.Where(x => x.Name == city).First();
+
+            if (isMale)
+            {
+                if(positionBorn == 1)
+                {
+                    egn[6] = currentCity.StartValue.ToString().Substring(0, 1);
+                    egn[7] = currentCity.StartValue.ToString().Substring(1, 1);
+                    egn[8] = currentCity.StartValue.ToString().Substring(2, 1);
+                }
+                else
+                {
+                    egn[6] = (currentCity.StartValue + positionBorn * 2).ToString().Substring(0, 1);
+                    egn[7] = (currentCity.StartValue + positionBorn * 2).Substring(1, 1);
+                    egn[8] = (currentCity.StartValue + positionBorn * 2).Substring(2, 1);
+                }
             }
 
             return egn.ToString();
