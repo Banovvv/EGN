@@ -1,5 +1,6 @@
 ﻿using EGN.Exceptions;
 using EGN.Interfaces;
+using System.Text;
 
 namespace EGN.Models
 {
@@ -52,31 +53,26 @@ namespace EGN.Models
                 throw new InvalidCityException(city);
             }
 
-            string[] egn = new string[10];
+            StringBuilder egn = new StringBuilder();
 
-            egn[0] = birthDate.Year.ToString().Substring(2, 1);
-            egn[1] = birthDate.Year.ToString().Substring(3, 1);
+            egn.Append(birthDate.Year.ToString().Substring(2, 2));
 
             if(birthDate.Month.ToString().Length == 1)
             {
-                egn[2] = "0";
-                egn[3] = birthDate.Month.ToString();
+                egn.Append($"0{birthDate.Month}");
             }
             else
             {
-                egn[2] = birthDate.Month.ToString().Substring(0, 1);
-                egn[3] = birthDate.Month.ToString().Substring(1, 1);
+                egn.Append(birthDate.Month.ToString().Substring(0, 2));
             }
 
             if (birthDate.Day.ToString().Length == 1)
             {
-                egn[4] = "0";
-                egn[5] = birthDate.Day.ToString();
+                egn.Append($"0{birthDate.Day}");
             }
             else
             {
-                egn[4] = birthDate.Day.ToString().Substring(0, 1);
-                egn[5] = birthDate.Day.ToString().Substring(1, 1);
+                egn.Append(birthDate.Day.ToString().Substring(0, 2));
             }
 
             Region currentCity = _regions.Where(x => x.Name == city).First();
@@ -85,15 +81,11 @@ namespace EGN.Models
             {
                 if(positionBorn == 1)
                 {
-                    egn[6] = currentCity.StartValue.ToString().Substring(0, 1);
-                    egn[7] = currentCity.StartValue.ToString().Substring(1, 1);
-                    egn[8] = currentCity.StartValue.ToString().Substring(2, 1);
+                    egn.Append(currentCity.StartValue);
                 }
                 else
                 {
-                    egn[6] = (currentCity.StartValue + positionBorn * 2).ToString().Substring(0, 1);
-                    egn[7] = (currentCity.StartValue + positionBorn * 2).ToString().Substring(1, 1);
-                    egn[8] = (currentCity.StartValue + positionBorn * 2).ToString().Substring(2, 1);
+                    egn.Append(currentCity.StartValue + ((positionBorn - 1) * 2));
                 }
             }
 
