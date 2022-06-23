@@ -1,2 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using EGN.Models;
+var generator = new Egn();
+var egn = generator.Generate(1990, 8, 10, "Ловеч", true);
+Console.WriteLine(egn);
