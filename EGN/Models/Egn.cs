@@ -1,6 +1,7 @@
 ﻿using EGN.Exceptions;
 using EGN.Interfaces;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace EGN.Models
 {
@@ -59,22 +60,15 @@ namespace EGN.Models
 
             egn.Append(birthDate.Year.ToString().Substring(2, 2));
 
-            if (birthDate.Month.ToString().Length == 1)
-            {
-                egn.Append($"0{birthDate.Month}");
-            }
-            else
-            {
-                egn.Append(birthDate.Month.ToString().Substring(0, 2));
-            }
+            egn.Append(CalculateMonthDigits(birthDate));
 
-            if (birthDate.Day.ToString().Length == 1)
+            if (birthDate.Day < 10)
             {
                 egn.Append($"0{birthDate.Day}");
             }
             else
             {
-                egn.Append(birthDate.Day.ToString().Substring(0, 2));
+                egn.Append(birthDate.Day);
             }
 
             Region currentCity = _regions.Where(x => x.Name == city).First();
@@ -96,6 +90,33 @@ namespace EGN.Models
             return egn.ToString();
         }
 
+        private string CalculateMonthDigits(DateTime birthDate)
+        {
+            StringBuilder egnMonthDigits = new StringBuilder();
+
+            if (birthDate.Year < 1900)
+            {
+                egnMonthDigits.Append(birthDate.Month + 20);
+            }
+            else if (birthDate.Year > 1999)
+            {
+                egnMonthDigits.Append(birthDate.Month + 40);
+            }
+            else
+            {
+                if (birthDate.Month < 10)
+                {
+                    egnMonthDigits.Append($"0{birthDate.Month}");
+                }
+                else
+                {
+                    egnMonthDigits.Append(birthDate.Month);
+                }
+            }
+
+            return egnMonthDigits.ToString().Trim();
+        }
+
         public string Generate(int year, int month, int day, string city, bool isMale)
         {
             CheckBirthDate(year, month, day);
@@ -107,8 +128,12 @@ namespace EGN.Models
 
         public bool Validate(string egn)
         {
+            if (egn == null || egn.Length != 10)
+            {
+                return false;
+            }
 
-            if (egn.Length != 10)
+            if (!Regex.IsMatch(egn, "[0-9]{10}"))
             {
                 return false;
             }
