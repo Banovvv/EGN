@@ -1,5 +1,6 @@
 ﻿using EGN.Exceptions;
 using EGN.Interfaces;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -7,7 +8,7 @@ namespace EGN.Models
 {
     public class Egn : IValidator, IGenerator
     {
-        private readonly int positionBorn = 1;
+        private readonly int positionBorn = 2;
         private readonly DateTime minBirthDate = new DateTime(1800, 1, 1);
         private readonly DateTime maxBirthDate = new DateTime(2099, 12, 31);
         private readonly int[] _weights = new int[] { 2, 4, 8, 5, 10, 9, 7, 3, 6 };
@@ -85,7 +86,7 @@ namespace EGN.Models
                 }
             }
 
-            egn.Append(CalculateLastDigit(egn.ToString()));
+            egn.Append(CalculateCheckSum(egn.ToString()));
 
             return egn.ToString();
         }
@@ -101,7 +102,12 @@ namespace EGN.Models
 
         public bool Validate(string egn)
         {
-            if (egn == null || egn.Length != 10)
+            if (string.IsNullOrEmpty(egn) || string.IsNullOrWhiteSpace(egn))
+            {
+                return false;
+            }
+
+            if (egn.Length != 10)
             {
                 return false;
             }
@@ -111,12 +117,56 @@ namespace EGN.Models
                 return false;
             }
 
-            if (!CheckLastDigit(egn))
+            var year = int.Parse(egn.Substring(0, 2));
+            var month = int.Parse(egn.Substring(2, 2));
+            var day = int.Parse(egn.Substring(4, 2));
+
+            if (!ValidateBirthDate(year, month, day))
+            {
+                return false;
+            }
+
+            if (!ValidateCheckSum(egn))
             {
                 return false;
             }
 
             return true;
+        }
+
+        private bool ValidateBirthDate(int year, int month, int day)
+        {
+            if (month <= 12)
+            {
+                if (!DateTime.TryParse($"19{year}-{month}-{day}", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime dt))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            else if (month > 12 && month <= 32)
+            {
+                if (!DateTime.TryParse($"18{year}-{month - 20}-{day}", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime dt))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            else if (month > 32 && month <= 52)
+            {
+                if (!DateTime.TryParse($"20{year}-{month - 40}-{day}", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime dt))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         private string CalculateMonthDigits(DateTime birthDate)
@@ -145,16 +195,17 @@ namespace EGN.Models
 
             return egnMonthDigits.ToString().Trim();
         }
-        private string CalculateLastDigit(string currentEgn)
+        private string CalculateCheckSum(string currentEgn)
         {
-            int egnSum = 0;
+            int sum = 0;
 
             for (int i = 0; i < 9; i++)
             {
-                egnSum += currentEgn[i] * _weights[i];
+                int currentDigit = int.Parse(currentEgn[i].ToString());
+                sum += currentDigit * _weights[i];
             }
 
-            int remainder = egnSum % 11;
+            int remainder = sum % 11;
 
             if (remainder == 10)
             {
@@ -183,11 +234,11 @@ namespace EGN.Models
         }
 
 
-        private bool CheckLastDigit(string egn)
+        private bool ValidateCheckSum(string egn)
         {
             int sum = 0;
 
-            for (int i = 0; i < egn.Length - 2; i++)
+            for (int i = 0; i < 9; i++)
             {
                 int currentDigit = int.Parse(egn[i].ToString());
 
@@ -201,7 +252,9 @@ namespace EGN.Models
                 remainder = 0;
             }
 
-            if (egn[9] == remainder)
+            int checkSum = int.Parse(egn[9].ToString());
+
+            if (checkSum == remainder)
             {
                 return true;
             }

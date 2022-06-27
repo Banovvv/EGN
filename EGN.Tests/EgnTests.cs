@@ -7,6 +7,7 @@ namespace EGN.Tests
     public class EgnTests
     {
         [Test]
+        [TestCase("9206183047")]
         [TestCase("7524169268")]
         [TestCase("7501010010")]
         public void ValidateShouldWorkWithValidEgn(string egn)
