@@ -6,6 +6,7 @@ namespace EGN.Tests
     [TestFixture]
     public class EgnTests
     {
+        #region ValidationTests
         [Test]
         [TestCase("9206183026")]
         [TestCase("7524169268")]
@@ -60,5 +61,6 @@ namespace EGN.Tests
             var result = egnValidator.Validate(egn);
             Assert.False(result);
         }
+        #endregion
     }
 }
