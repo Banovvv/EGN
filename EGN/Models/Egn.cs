@@ -90,33 +90,6 @@ namespace EGN.Models
             return egn.ToString();
         }
 
-        private string CalculateMonthDigits(DateTime birthDate)
-        {
-            StringBuilder egnMonthDigits = new StringBuilder();
-
-            if (birthDate.Year < 1900)
-            {
-                egnMonthDigits.Append(birthDate.Month + 20);
-            }
-            else if (birthDate.Year > 1999)
-            {
-                egnMonthDigits.Append(birthDate.Month + 40);
-            }
-            else
-            {
-                if (birthDate.Month < 10)
-                {
-                    egnMonthDigits.Append($"0{birthDate.Month}");
-                }
-                else
-                {
-                    egnMonthDigits.Append(birthDate.Month);
-                }
-            }
-
-            return egnMonthDigits.ToString().Trim();
-        }
-
         public string Generate(int year, int month, int day, string city, bool isMale)
         {
             CheckBirthDate(year, month, day);
@@ -146,6 +119,32 @@ namespace EGN.Models
             throw new NotImplementedException();
         }
 
+        private string CalculateMonthDigits(DateTime birthDate)
+        {
+            StringBuilder egnMonthDigits = new StringBuilder();
+
+            if (birthDate.Year < 1900)
+            {
+                egnMonthDigits.Append(birthDate.Month + 20);
+            }
+            else if (birthDate.Year > 1999)
+            {
+                egnMonthDigits.Append(birthDate.Month + 40);
+            }
+            else
+            {
+                if (birthDate.Month < 10)
+                {
+                    egnMonthDigits.Append($"0{birthDate.Month}");
+                }
+                else
+                {
+                    egnMonthDigits.Append(birthDate.Month);
+                }
+            }
+
+            return egnMonthDigits.ToString().Trim();
+        }
         private string CalculateLastDigit(string currentEgn)
         {
             int egnSum = 0;
