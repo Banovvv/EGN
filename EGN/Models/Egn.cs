@@ -89,7 +89,28 @@ namespace EGN.Models
                 }
             }
 
+            egn.Append(CalculateLastDigit(egn.ToString()));
+
             return egn.ToString();
+        }
+
+        private string CalculateLastDigit(string currentEgn)
+        {
+            int egnSum = 0;
+
+            for (int i = 0; i < 9; i++)
+            {
+                egnSum += currentEgn[i] * _weights[i];
+            }
+
+            int reminder = egnSum % 11;
+
+            if(reminder == 10)
+            {
+                reminder = 0;
+            }
+
+            return reminder.ToString();
         }
 
         public string Generate(int year, int month, int day, string city, bool isMale)
