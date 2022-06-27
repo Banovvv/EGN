@@ -94,6 +94,30 @@ namespace EGN.Models
             return egn.ToString();
         }
 
+        public string Generate(int year, int month, int day, string city, bool isMale)
+        {
+            CheckBirthDate(year, month, day);
+
+            DateTime birthDate = new DateTime(year, month, day);
+
+            return Generate(birthDate, city, isMale);
+        }
+
+        public bool Validate(string egn)
+        {
+            if (egn.Length != 10)
+            {
+                return false;
+            }
+
+            if (!CheckLastDigit(egn))
+            {
+                return false;
+            }
+
+            throw new NotImplementedException();
+        }
+
         private string CalculateLastDigit(string currentEgn)
         {
             int egnSum = 0;
@@ -105,21 +129,12 @@ namespace EGN.Models
 
             int reminder = egnSum % 11;
 
-            if(reminder == 10)
+            if (reminder == 10)
             {
                 reminder = 0;
             }
 
             return reminder.ToString();
-        }
-
-        public string Generate(int year, int month, int day, string city, bool isMale)
-        {
-            CheckBirthDate(year, month, day);
-
-            DateTime birthDate = new DateTime(year, month, day);
-
-            return Generate(birthDate, city, isMale);
         }
 
         private static void CheckBirthDate(int year, int month, int day)
@@ -140,20 +155,6 @@ namespace EGN.Models
             }
         }
 
-        public bool Validate(string egn)
-        {
-            if (egn.Length != 10)
-            {
-                return false;
-            }
-
-            if (!CheckLastDigit(egn))
-            {
-                return false;
-            }
-
-            throw new NotImplementedException();
-        }
 
         private bool CheckLastDigit(string egn)
         {
