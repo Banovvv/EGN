@@ -6,6 +6,14 @@ namespace EGN.Tests
     [TestFixture]
     public class EgnTests
     {
+        private Egn _validator;
+
+        [SetUp]
+        public void Initialize()
+        {
+            _validator = new Egn();
+        }
+
         #region ValidationTests
         [Test]
         [TestCase("9206183026")]
@@ -13,8 +21,7 @@ namespace EGN.Tests
         [TestCase("7501010010")]
         public void ValidateShouldWorkWithValidEgn(string egn)
         {
-            var egnValidator = new Egn();
-            var result = egnValidator.Validate(egn);
+            var result = _validator.Validate(egn);
             Assert.True(result);
         }
 
@@ -23,8 +30,7 @@ namespace EGN.Tests
         [TestCase("9999999999")]
         public void ValidateShouldNotWorkWithInvalidEgn(string egn)
         {
-            var egnValidator = new Egn();
-            var result = egnValidator.Validate(egn);
+            var result = _validator.Validate(egn);
             Assert.False(result);
         }
 
@@ -33,8 +39,7 @@ namespace EGN.Tests
         [TestCase("qwaserasdx")]
         public void ValidateShouldNotWorkWithNonNumericEgn(string egn)
         {
-            var egnValidator = new Egn();
-            var result = egnValidator.Validate(egn);
+            var result = _validator.Validate(egn);
             Assert.False(result);
         }
 
@@ -45,8 +50,7 @@ namespace EGN.Tests
         [TestCase("qwaserast")]
         public void ValidateShouldNotWorkWithShorterEgn(string egn)
         {
-            var egnValidator = new Egn();
-            var result = egnValidator.Validate(egn);
+            var result = _validator.Validate(egn);
             Assert.False(result);
         }
 
@@ -57,8 +61,7 @@ namespace EGN.Tests
         [TestCase("qwasedddddadarasdada123t")]
         public void ValidateShouldNotWorkWithLongerEgn(string egn)
         {
-            var egnValidator = new Egn();
-            var result = egnValidator.Validate(egn);
+            var result = _validator.Validate(egn);
             Assert.False(result);
         }
         #endregion
