@@ -78,11 +78,11 @@ namespace EGN.Models
             {
                 if (positionBorn == 1)
                 {
-                    egn.Append(currentCity.StartValue);
+                    egn.Append($"{currentCity.StartValue:d3}");
                 }
                 else
                 {
-                    egn.Append(currentCity.StartValue + ((positionBorn - 1) * 2));
+                    egn.Append($"{(currentCity.StartValue + ((positionBorn - 1) * 2)):d3}");
                 }
             }
 
