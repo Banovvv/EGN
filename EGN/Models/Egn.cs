@@ -111,12 +111,12 @@ namespace EGN.Models
                 return false;
             }
 
-            if (!CheckLastDigit(egn))
-            {
-                return false;
-            }
+            //if (!CheckLastDigit(egn))
+            //{
+            //    return false;
+            //}
 
-            throw new NotImplementedException();
+            return true;
         }
 
         private string CalculateMonthDigits(DateTime birthDate)
