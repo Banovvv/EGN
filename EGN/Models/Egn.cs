@@ -7,6 +7,8 @@ namespace EGN.Models
     public class Egn : IValidator, IGenerator
     {
         private readonly int positionBorn = 1;
+        private readonly DateTime minBirthDate = new DateTime(1800, 1, 1);
+        private readonly DateTime maxBirthDate = new DateTime(2099, 12, 31);
         private readonly int[] _weights = new int[] { 2, 4, 8, 5, 10, 9, 7, 3, 6 };
         private readonly IEnumerable<Region> _regions = new List<Region>()
         {
@@ -43,7 +45,7 @@ namespace EGN.Models
 
         public string Generate(DateTime birthDate, string city, bool isMale)
         {
-            if (birthDate.Year < 1800 || birthDate.Year > 2099)
+            if (birthDate < minBirthDate || birthDate > maxBirthDate)
             {
                 throw new InvalidYearException();
             }
@@ -57,7 +59,7 @@ namespace EGN.Models
 
             egn.Append(birthDate.Year.ToString().Substring(2, 2));
 
-            if(birthDate.Month.ToString().Length == 1)
+            if (birthDate.Month.ToString().Length == 1)
             {
                 egn.Append($"0{birthDate.Month}");
             }
@@ -79,7 +81,7 @@ namespace EGN.Models
 
             if (isMale)
             {
-                if(positionBorn == 1)
+                if (positionBorn == 1)
                 {
                     egn.Append(currentCity.StartValue);
                 }
@@ -105,6 +107,7 @@ namespace EGN.Models
 
         public bool Validate(string egn)
         {
+
             if (egn.Length != 10)
             {
                 return false;
@@ -127,14 +130,14 @@ namespace EGN.Models
                 egnSum += currentEgn[i] * _weights[i];
             }
 
-            int reminder = egnSum % 11;
+            int remainder = egnSum % 11;
 
-            if (reminder == 10)
+            if (remainder == 10)
             {
-                reminder = 0;
+                remainder = 0;
             }
 
-            return reminder.ToString();
+            return remainder.ToString();
         }
 
         private static void CheckBirthDate(int year, int month, int day)
