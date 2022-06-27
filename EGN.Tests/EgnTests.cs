@@ -15,5 +15,25 @@ namespace EGN.Tests
             var result = egnValidator.Validate(egn);
             Assert.True(result);
         }
+
+        [Test]
+        [TestCase("0000000000")]
+        [TestCase("9999999999")]
+        public void ValidateShouldNotWorkWithInvalidEgn(string egn)
+        {
+            var egnValidator = new Egn();
+            var result = egnValidator.Validate(egn);
+            Assert.False(result);
+        }
+
+        [Test]
+        [TestCase("acbd1234xx")]
+        [TestCase("qwaserasdx")]
+        public void ValidateShouldNotWorkWithNonNumericEgn(string egn)
+        {
+            var egnValidator = new Egn();
+            var result = egnValidator.Validate(egn);
+            Assert.False(result);
+        }
     }
 }
