@@ -111,10 +111,10 @@ namespace EGN.Models
                 return false;
             }
 
-            //if (!CheckLastDigit(egn))
-            //{
-            //    return false;
-            //}
+            if (!CheckLastDigit(egn))
+            {
+                return false;
+            }
 
             return true;
         }
