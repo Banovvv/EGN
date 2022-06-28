@@ -48,5 +48,13 @@ namespace EGN.Tests
         {
             Assert.Throws<InvalidMonthException>(() => _generator.Generate(year, month, day, city, isMale));
         }
+
+        [TestCase(2022, 1, 158, "Бургас", true)]
+        [TestCase(1990, 9, -11, "Пловдив", false)]
+        [TestCase(1800, 3, 33, "Видин", true)]
+        public void GenerateShouldNotWorkWithFiveParamatersAndInvalidMDay(int year, int month, int day, string city, bool isMale)
+        {
+            Assert.Throws<InvalidDayException>(() => _generator.Generate(year, month, day, city, isMale));
+        }
     }
 }
