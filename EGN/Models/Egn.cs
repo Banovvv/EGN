@@ -63,14 +63,7 @@ namespace EGN.Models
 
             egn.Append(CalculateMonthDigits(birthDate));
 
-            if (birthDate.Day < 10)
-            {
-                egn.Append($"0{birthDate.Day}");
-            }
-            else
-            {
-                egn.Append(birthDate.Day);
-            }
+            egn.Append($"{birthDate.Day:d2}");
 
             Region currentCity = _regions.Where(x => x.Name == city).First();
 
@@ -83,6 +76,17 @@ namespace EGN.Models
                 else
                 {
                     egn.Append($"{(currentCity.StartValue + ((positionBorn - 1) * 2)):d3}");
+                }
+            }
+            else
+            {
+                if (positionBorn == 1)
+                {
+                    egn.Append($"{(currentCity.StartValue + 1):d3}");
+                }
+                else
+                {
+                    egn.Append($"{(currentCity.StartValue + ((positionBorn - 1) * 2) + 1):d3}");
                 }
             }
 

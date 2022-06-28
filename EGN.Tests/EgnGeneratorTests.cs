@@ -13,16 +13,19 @@ namespace EGN.Tests
             _generator = new Egn();
         }
 
-        [Test]
         public void GenerateShouldWorkWithThreeValidParamaters()
         {
 
         }
 
-        [Test]
-        public void GenerateShouldWorkWithFiveValidParamaters()
-        {
 
+        [TestCase(1989, 6, 18, "Бургас", true)]
+        [TestCase(1800, 1, 1, "Пловдив", false)]
+        [TestCase(2099, 12, 31, "Видин", true)]
+        public void GenerateShouldWorkWithFiveValidParamaters(int year, int month, int day, string city, bool isMale)
+        {
+            var result = _generator.Generate(year, month, day, city, isMale);
+            Assert.True(_generator.Validate(result));
         }
     }
 }
