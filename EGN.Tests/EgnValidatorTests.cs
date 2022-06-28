@@ -24,6 +24,9 @@ namespace EGN.Tests
             Assert.True(result);
         }
 
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
         [TestCase("0000000000")]
         [TestCase("9999999999")]
         [TestCase("92061830")]
