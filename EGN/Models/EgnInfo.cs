@@ -12,12 +12,13 @@ namespace EGN.Models
         private string region;
         private string gender;
 
-        public EgnInfo(string egn, int year, int month, int day, string region, string gender)
+        public EgnInfo(string egn, int year, int month, int day, string region, string gender, int birthPosition)
         {
             Egn = egn;
             BirthDate = new DateOnly(year, month, day);
             Region = region;
             Gender = gender;
+            BirthPosition = birthPosition;
         }
 
         public string Egn
@@ -44,7 +45,7 @@ namespace EGN.Models
                     throw new ArgumentException("Градът на раждане не може да е null");
                 }
 
-                egn = value;
+                region = value;
             }
         }
         public string Gender
@@ -57,17 +58,12 @@ namespace EGN.Models
                     throw new ArgumentException("Полът не може да е null");
                 }
 
-                egn = value;
+                gender = value;
             }
         }
 
-        private int BirthPosition => GetBirthPosition();
+        public int BirthPosition { get; private set; }
 
-        private int GetBirthPosition()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString() => $"{Egn} е ЕГН на {Gender}, {(Gender == "мъж" ? "роден" : "родена")} на {BirthDate.ToString("dd-MM-yyyy")} в регион {Region} като преди нея в този ден и регион са се родили {BirthPosition} {(Gender == "мъж" ? "момчета" : "момичета")}";
+        public override string ToString() => $"{Egn} е ЕГН на {Gender}, {(Gender == "мъж" ? "роден" : "родена")} на {BirthDate.ToString("dd-MM-yyyy")} в регион {Region}. Преди {(Gender == "мъж" ? "него" : "нея")} в този ден и регион са се родили {BirthPosition} {(Gender == "мъж" ? "момчета" : "момичета")}";
     }
 }

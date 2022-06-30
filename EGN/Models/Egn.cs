@@ -187,6 +187,52 @@ namespace EGN.Models
             return true;
         }
 
+        public string GetInfo(string egn)
+        {
+            if (!Validate(egn))
+            {
+                throw new ArgumentException("Невалидно ЕГН!");
+            }
+
+            var year = int.Parse($"19{egn.Substring(0, 2)}");
+            var month = int.Parse(egn.Substring(2, 2));
+
+            if (month >= 21 && month <= 32)
+            {
+                month -= 20;
+                year -= 100;
+            }
+            else if (month >= 41 && month <= 52)
+            {
+                month -= 40;
+                year += 100;
+            }
+            var day = int.Parse(egn.Substring(4, 2));
+            var regionInfo = int.Parse(egn.Substring(6, 3));
+            var region = _regions.First(x => x.StartValue <= regionInfo && x.EndValue >= regionInfo).Name;
+            var gender = regionInfo % 2 == 0 ? "мъж" : "жена";
+
+            var birthPosition = GetBirthPosition(region, regionInfo);
+
+            var egnInfo = new EgnInfo(egn, year, month, day, region, gender, birthPosition);
+
+            return egnInfo.ToString();
+        }
+
+        private int GetBirthPosition(string region, int regionInfo)
+        {
+            var currentRegion = _regions.First(x => x.Name == region);
+
+            if (regionInfo % 2 == 0)
+            {
+                return (((regionInfo - currentRegion.StartValue) + 2) / 2) - 1;
+            }
+            else
+            {
+                return (((regionInfo - currentRegion.StartValue) + 1) / 2) - 1;
+            }
+        }
+
         private static int GetNumberOfAllocatedBirths(Region currentCity) => (currentCity.EndValue + 1 - currentCity.StartValue) / 2;
 
         private static bool IsValidBirthPosition(Region currentCity, int birthPosition)
