@@ -15,6 +15,7 @@ namespace EGN.Tests
             _generator = new Egn();
         }
 
+        #region Generate Tests
         [TestCase("1990-6-18", "Ловеч", false, 1)]
         [TestCase("2099-12-31", "Видин", true, 5)]
         [TestCase("1800-1-1", "София - град", false, 3)]
@@ -80,5 +81,66 @@ namespace EGN.Tests
         {
             Assert.Throws<IndexOutOfRangeException>(() => _generator.Generate(year, month, day, city, isMale, birthPosition));
         }
+        #endregion
+
+        #region GenerateAll Tests
+        [TestCase("1990-6-18", "Ловеч", false)]
+        [TestCase("2099-12-31", "Видин", true)]
+        [TestCase("1800-1-1", "София - град", false)]
+        public void GenerateAllShouldWorkWithThreeValidParamaters(DateTime birthDate, string city, bool isMale)
+        {
+            var results = _generator.GenerateAll(birthDate, city, isMale);
+
+            foreach (var result in results)
+            {
+                Assert.True(_generator.Validate(result));
+            }
+        }
+
+        [TestCase("1990-6-18", "Каспичан", false)]
+        [TestCase("2099-12-31", "Dragoman", true)]
+        [TestCase("1800-1-1", "Дюбай", false)]
+        public void GenerateAllShouldNotWorkWithThreeParamatersAndInvalidCity(DateTime birthDate, string city, bool isMale)
+        {
+            Assert.Throws<InvalidCityException>(() => _generator.GenerateAll(birthDate, city, isMale));
+        }
+
+        [TestCase(1989, 6, 18, "Бургас", true)]
+        [TestCase(1800, 1, 1, "Пловдив", false)]
+        [TestCase(2099, 12, 31, "Видин", true)]
+        public void GenerateAllShouldWorkWithFiveValidParamaters(int year, int month, int day, string city, bool isMale)
+        {
+            var results = _generator.GenerateAll(year, month, day, city, isMale);
+
+            foreach (var result in results)
+            {
+                Assert.True(_generator.Validate(result));
+            }
+        }
+
+        [TestCase(09870, 6, 18, "Бургас", true)]
+        [TestCase(1790, 1, 1, "Пловдив", false)]
+        [TestCase(2999, 12, 31, "Видин", true)]
+        public void GenerateAllShouldNotWorkWithFiveParamatersAndInvalidYear(int year, int month, int day, string city, bool isMale)
+        {
+            Assert.Throws<InvalidYearException>(() => _generator.GenerateAll(year, month, day, city, isMale));
+        }
+
+        [TestCase(2022, -1, 18, "Бургас", true)]
+        [TestCase(1990, 99, 1, "Пловдив", false)]
+        [TestCase(1800, 13, 31, "Видин", true)]
+        public void GenerateAllShouldNotWorkWithFiveParamatersAndInvalidMonth(int year, int month, int day, string city, bool isMale)
+        {
+            Assert.Throws<InvalidMonthException>(() => _generator.GenerateAll(year, month, day, city, isMale));
+        }
+
+        [TestCase(2022, 1, 158, "Бургас", true)]
+        [TestCase(1990, 9, -11, "Пловдив", false)]
+        [TestCase(1800, 3, 33, "Видин", true)]
+        public void GenerateAllShouldNotWorkWithFiveParamatersAndInvalidDay(int year, int month, int day, string city, bool isMale)
+        {
+            Assert.Throws<InvalidDayException>(() => _generator.GenerateAll(year, month, day, city, isMale));
+        }
+        #endregion
     }
 }
