@@ -27,7 +27,7 @@ namespace EGN.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    throw new ArgumentException();
+                    throw new ArgumentException("ЕГН не може да е null");
                 }
 
                 egn = value;
@@ -41,7 +41,7 @@ namespace EGN.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    throw new ArgumentException();
+                    throw new ArgumentException("Градът на раждане не може да е null");
                 }
 
                 egn = value;
@@ -54,7 +54,7 @@ namespace EGN.Models
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    throw new ArgumentException();
+                    throw new ArgumentException("Полът не може да е null");
                 }
 
                 egn = value;
