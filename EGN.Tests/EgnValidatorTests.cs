@@ -17,7 +17,7 @@ namespace EGN.Tests
         #region ValidationTests
         [TestCase("9206183026")]
         [TestCase("7524169268")]
-        [TestCase("7541010010")]
+        [TestCase("7541010940")]
         public void ValidateShouldWorkWithValidEgn(string egn)
         {
             var result = _validator.Validate(egn);
