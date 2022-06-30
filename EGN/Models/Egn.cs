@@ -8,8 +8,8 @@ namespace EGN.Models
 {
     public class Egn : IValidator, IGenerator
     {
-        private readonly DateTime minBirthDate = new DateTime(1800, 1, 1);
-        private readonly DateTime maxBirthDate = new DateTime(2099, 12, 31);
+        private readonly DateOnly minBirthDate = new DateOnly(1800, 1, 1);
+        private readonly DateOnly maxBirthDate = new DateOnly(2099, 12, 31);
         private readonly int[] _weights = new int[] { 2, 4, 8, 5, 10, 9, 7, 3, 6 };
         private readonly IEnumerable<Region> _regions = new List<Region>()
         {
@@ -44,7 +44,7 @@ namespace EGN.Models
             new Region("Друг", 926, 999)
         };
 
-        public string Generate(DateTime birthDate, string city, bool isMale, int birthPosition)
+        public string Generate(DateOnly birthDate, string city, bool isMale, int birthPosition)
         {
             if (birthDate < minBirthDate || birthDate > maxBirthDate)
             {
@@ -85,7 +85,7 @@ namespace EGN.Models
             return egn.ToString();
         }
 
-        public string[] GenerateAll(DateTime birthDate, string city, bool isMale)
+        public string[] GenerateAll(DateOnly birthDate, string city, bool isMale)
         {
             if (birthDate < minBirthDate || birthDate > maxBirthDate)
             {
@@ -139,7 +139,7 @@ namespace EGN.Models
         {
             CheckBirthDate(year, month, day);
 
-            DateTime birthDate = new DateTime(year, month, day);
+            DateOnly birthDate = new DateOnly(year, month, day);
 
             return Generate(birthDate, city, isMale, positionBorn);
         }
@@ -148,7 +148,7 @@ namespace EGN.Models
         {
             CheckBirthDate(year, month, day);
 
-            DateTime birthDate = new DateTime(year, month, day);
+            DateOnly birthDate = new DateOnly(year, month, day);
 
             return GenerateAll(birthDate, city, isMale);
         }
@@ -239,7 +239,7 @@ namespace EGN.Models
         {
             if (month <= 12)
             {
-                if (!DateTime.TryParse($"19{year}-{month}-{day}", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime dt))
+                if (!DateOnly.TryParse($"19{year}-{month}-{day}", out DateOnly date))
                 {
                     return false;
                 }
@@ -248,7 +248,7 @@ namespace EGN.Models
             }
             else if (month > 12 && month <= 32)
             {
-                if (!DateTime.TryParse($"18{year}-{month - 20}-{day}", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime dt))
+                if (!DateOnly.TryParse($"18{year}-{month - 20}-{day}", out DateOnly date))
                 {
                     return false;
                 }
@@ -257,7 +257,7 @@ namespace EGN.Models
             }
             else if (month > 32 && month <= 52)
             {
-                if (!DateTime.TryParse($"20{year}-{month - 40}-{day}", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal, out DateTime dt))
+                if (!DateOnly.TryParse($"20{year}-{month - 40}-{day}", out DateOnly date))
                 {
                     return false;
                 }
@@ -270,7 +270,7 @@ namespace EGN.Models
             }
         }
 
-        private string CalculateMonthDigits(DateTime birthDate)
+        private string CalculateMonthDigits(DateOnly birthDate)
         {
             StringBuilder egnMonthDigits = new StringBuilder();
 
