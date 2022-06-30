@@ -8,7 +8,6 @@ namespace EGN.Models
 {
     public class Egn : IValidator, IGenerator
     {
-        private readonly int positionBorn = 2;
         private readonly DateTime minBirthDate = new DateTime(1800, 1, 1);
         private readonly DateTime maxBirthDate = new DateTime(2099, 12, 31);
         private readonly int[] _weights = new int[] { 2, 4, 8, 5, 10, 9, 7, 3, 6 };
@@ -45,7 +44,7 @@ namespace EGN.Models
             new Region("Друг", 926, 999)
         };
 
-        public string Generate(DateTime birthDate, string city, bool isMale)
+        public string Generate(DateTime birthDate, string city, bool isMale, int birthPosition)
         {
             if (birthDate < minBirthDate || birthDate > maxBirthDate)
             {
@@ -67,27 +66,18 @@ namespace EGN.Models
 
             Region currentCity = _regions.Where(x => x.Name == city).First();
 
+            if (!IsValidBirthPosition(currentCity, birthPosition))
+            {
+                throw new IndexOutOfRangeException("Невалидна позиция на раждане!");
+            }
+
             if (isMale)
             {
-                if (positionBorn == 1)
-                {
-                    egn.Append($"{currentCity.StartValue:d3}");
-                }
-                else
-                {
-                    egn.Append($"{(currentCity.StartValue + ((positionBorn - 1) * 2)):d3}");
-                }
+                egn.Append($"{(currentCity.StartValue + ((birthPosition - 1) * 2)):d3}");
             }
             else
             {
-                if (positionBorn == 1)
-                {
-                    egn.Append($"{(currentCity.StartValue + 1):d3}");
-                }
-                else
-                {
-                    egn.Append($"{(currentCity.StartValue + ((positionBorn - 1) * 2) + 1):d3}");
-                }
+                egn.Append($"{(currentCity.StartValue + ((birthPosition - 1) * 2) + 1):d3}");
             }
 
             egn.Append(CalculateCheckSum(egn.ToString()));
@@ -95,13 +85,13 @@ namespace EGN.Models
             return egn.ToString();
         }
 
-        public string Generate(int year, int month, int day, string city, bool isMale)
+        public string Generate(int year, int month, int day, string city, bool isMale, int positionBorn)
         {
             CheckBirthDate(year, month, day);
 
             DateTime birthDate = new DateTime(year, month, day);
 
-            return Generate(birthDate, city, isMale);
+            return Generate(birthDate, city, isMale, positionBorn);
         }
 
         public bool Validate(string egn)
@@ -131,6 +121,20 @@ namespace EGN.Models
             }
 
             if (!ValidateCheckSum(egn))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool IsValidBirthPosition(Region currentCity, int birthPosition)
+        {
+            int minIndex = currentCity.StartValue;
+            int maxIndex = currentCity.EndValue;
+            int positionsPerGender = (maxIndex + 1 - minIndex) / 2;
+
+            if (birthPosition <= 0 || birthPosition > positionsPerGender)
             {
                 return false;
             }
