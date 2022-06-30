@@ -16,28 +16,31 @@ namespace EGN.Tests
         }
 
         #region Generate Tests
-        [TestCase("1990-6-18", "Ловеч", false, 1)]
-        [TestCase("2099-12-31", "Видин", true, 5)]
-        [TestCase("1800-1-1", "София - град", false, 3)]
-        public void GenerateShouldWorkWithFourValidParamaters(DateTime birthDate, string city, bool isMale, int birthPosition)
+        [TestCase(1990, 6, 18, "Ловеч", false, 1)]
+        [TestCase(2099, 12, 31, "Видин", true, 5)]
+        [TestCase(1800, 1, 1, "София - град", false, 3)]
+        public void GenerateShouldWorkWithFourValidParamaters(int year, int month, int day, string city, bool isMale, int birthPosition)
         {
+            DateOnly birthDate = new DateOnly(year, month, day);
             var result = _generator.Generate(birthDate, city, isMale, birthPosition);
             Assert.True(_generator.Validate(result));
         }
 
-        [TestCase("1990-6-18", "Каспичан", false, 1)]
-        [TestCase("2099-12-31", "Dragoman", true, 5)]
-        [TestCase("1800-1-1", "Дюбай", false, 3)]
-        public void GenerateShouldNotWorkWithFourParamatersAndInvalidCity(DateTime birthDate, string city, bool isMale, int birthPosition)
+        [TestCase(1990, 6, 18, "Каспичан", false, 1)]
+        [TestCase(2099, 12, 31, "Dragoman", true, 5)]
+        [TestCase(1800, 1, 1, "Дюбай", false, 3)]
+        public void GenerateShouldNotWorkWithFourParamatersAndInvalidCity(int year, int month, int day, string city, bool isMale, int birthPosition)
         {
+            DateOnly birthDate = new DateOnly(year, month, day);
             Assert.Throws<InvalidCityException>(() => _generator.Generate(birthDate, city, isMale, birthPosition));
         }
 
-        [TestCase("1990-6-18", "Ловеч", false, -1)]
-        [TestCase("2099-12-31", "Видин", true, 0)]
-        [TestCase("1800-1-1", "София - град", false, 55)]
-        public void GenerateShouldNotWorkWithFourParamatersAndInvalidBirthPosition(DateTime birthDate, string city, bool isMale, int birthPosition)
+        [TestCase(1990, 6, 18, "Ловеч", false, -1)]
+        [TestCase(2099, 12, 31, "Видин", true, 0)]
+        [TestCase(1800, 1, 1, "София - град", false, 55)]
+        public void GenerateShouldNotWorkWithFourParamatersAndInvalidBirthPosition(int year, int month, int day, string city, bool isMale, int birthPosition)
         {
+            DateOnly birthDate = new DateOnly(year, month, day);
             Assert.Throws<IndexOutOfRangeException>(() => _generator.Generate(birthDate, city, isMale, birthPosition));
         }
 
@@ -84,11 +87,12 @@ namespace EGN.Tests
         #endregion
 
         #region GenerateAll Tests
-        [TestCase("1990-6-18", "Ловеч", false)]
-        [TestCase("2099-12-31", "Видин", true)]
-        [TestCase("1800-1-1", "София - град", false)]
-        public void GenerateAllShouldWorkWithThreeValidParamaters(DateTime birthDate, string city, bool isMale)
+        [TestCase(1989, 6, 18, "Ловеч", false)]
+        [TestCase(2099, 12, 31, "Видин", true)]
+        [TestCase(1800, 1, 1, "София - град", false)]
+        public void GenerateAllShouldWorkWithThreeValidParamaters(int year, int month, int day, string city, bool isMale)
         {
+            DateOnly birthDate = new DateOnly(year, month, day);
             var results = _generator.GenerateAll(birthDate, city, isMale);
 
             foreach (var result in results)
@@ -97,11 +101,12 @@ namespace EGN.Tests
             }
         }
 
-        [TestCase("1990-6-18", "Каспичан", false)]
-        [TestCase("2099-12-31", "Dragoman", true)]
-        [TestCase("1800-1-1", "Дюбай", false)]
-        public void GenerateAllShouldNotWorkWithThreeParamatersAndInvalidCity(DateTime birthDate, string city, bool isMale)
+        [TestCase(1989, 6, 18, "Каспичан", false)]
+        [TestCase(2099, 12, 31, "Dragoman", true)]
+        [TestCase(1800, 1, 1, "Дюбай", false)]
+        public void GenerateAllShouldNotWorkWithThreeParamatersAndInvalidCity(int year, int month, int day, string city, bool isMale)
         {
+            DateOnly birthDate = new DateOnly(year, month, day);
             Assert.Throws<InvalidCityException>(() => _generator.GenerateAll(birthDate, city, isMale));
         }
 
