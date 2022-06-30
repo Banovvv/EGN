@@ -85,6 +85,56 @@ namespace EGN.Models
             return egn.ToString();
         }
 
+        public string[] GenerateAll(DateTime birthDate, string city, bool isMale)
+        {
+            if (birthDate < minBirthDate || birthDate > maxBirthDate)
+            {
+                throw new InvalidYearException();
+            }
+
+            if (_regions.Where(x => x.Name == city).FirstOrDefault() == null)
+            {
+                throw new InvalidCityException(city);
+            }
+
+            Region currentCity = _regions.Where(x => x.Name == city).First();
+
+            int allocatedBirths = GetNumberOfAllocatedBirths(currentCity);
+
+            string[] egnNumbers = new string[allocatedBirths];
+
+            for (int birthPosition = 1; birthPosition <= allocatedBirths; birthPosition++)
+            {
+                StringBuilder egn = new StringBuilder();
+
+                egn.Append(birthDate.Year.ToString().Substring(2, 2));
+
+                egn.Append(CalculateMonthDigits(birthDate));
+
+                egn.Append($"{birthDate.Day:d2}");
+
+                if (!IsValidBirthPosition(currentCity, birthPosition))
+                {
+                    throw new IndexOutOfRangeException("Невалидна позиция на раждане!");
+                }
+
+                if (isMale)
+                {
+                    egn.Append($"{(currentCity.StartValue + ((birthPosition - 1) * 2)):d3}");
+                }
+                else
+                {
+                    egn.Append($"{(currentCity.StartValue + ((birthPosition - 1) * 2) + 1):d3}");
+                }
+
+                egn.Append(CalculateCheckSum(egn.ToString()));
+
+                egnNumbers[birthPosition - 1] = egn.ToString();
+            }
+
+            return egnNumbers;
+        }
+
         public string Generate(int year, int month, int day, string city, bool isMale, int positionBorn)
         {
             CheckBirthDate(year, month, day);
@@ -92,6 +142,15 @@ namespace EGN.Models
             DateTime birthDate = new DateTime(year, month, day);
 
             return Generate(birthDate, city, isMale, positionBorn);
+        }
+
+        public string[] GenerateAll(int year, int month, int day, string city, bool isMale)
+        {
+            CheckBirthDate(year, month, day);
+
+            DateTime birthDate = new DateTime(year, month, day);
+
+            return GenerateAll(birthDate, city, isMale);
         }
 
         public bool Validate(string egn)
@@ -128,6 +187,8 @@ namespace EGN.Models
             return true;
         }
 
+        private static int GetNumberOfAllocatedBirths(Region currentCity) => (currentCity.EndValue + 1 - currentCity.StartValue) / 2;
+
         private static bool IsValidBirthPosition(Region currentCity, int birthPosition)
         {
             int minIndex = currentCity.StartValue;
@@ -142,7 +203,7 @@ namespace EGN.Models
             return true;
         }
 
-        private bool ValidateBirthDate(int year, int month, int day)
+        private static bool ValidateBirthDate(int year, int month, int day)
         {
             if (month <= 12)
             {
