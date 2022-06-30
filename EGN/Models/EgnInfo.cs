@@ -68,6 +68,6 @@ namespace EGN.Models
             throw new NotImplementedException();
         }
 
-        public override string ToString() => $"{Egn} е ЕГН на {Gender}, {(Gender == "мъж" ? "роден" : "родена")} на 1 януари 1992 г. в регион {Region} като преди нея в този ден и регион са се родили {BirthPosition} {(Gender == "мъж" ? "момчета" : "момичета")}";
+        public override string ToString() => $"{Egn} е ЕГН на {Gender}, {(Gender == "мъж" ? "роден" : "родена")} на {BirthDate.ToString("dd-MM-yyyy")} в регион {Region} като преди нея в този ден и регион са се родили {BirthPosition} {(Gender == "мъж" ? "момчета" : "момичета")}";
     }
 }
