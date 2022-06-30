@@ -194,27 +194,13 @@ namespace EGN.Models
                 throw new ArgumentException("Невалидно ЕГН!");
             }
 
-            var year = int.Parse($"19{egn.Substring(0, 2)}");
-            var month = int.Parse(egn.Substring(2, 2));
-
-            if (month >= 21 && month <= 32)
-            {
-                month -= 20;
-                year -= 100;
-            }
-            else if (month >= 41 && month <= 52)
-            {
-                month -= 40;
-                year += 100;
-            }
-            var day = int.Parse(egn.Substring(4, 2));
             var regionInfo = int.Parse(egn.Substring(6, 3));
             var region = _regions.First(x => x.StartValue <= regionInfo && x.EndValue >= regionInfo).Name;
             var gender = regionInfo % 2 == 0 ? "мъж" : "жена";
 
             var birthPosition = GetBirthPosition(region, regionInfo);
 
-            var egnInfo = new EgnInfo(egn, year, month, day, region, gender, birthPosition);
+            var egnInfo = new EgnInfo(egn, region, gender, birthPosition);
 
             return egnInfo.ToString();
         }

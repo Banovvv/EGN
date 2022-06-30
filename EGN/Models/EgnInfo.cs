@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EGN.Models
+﻿namespace EGN.Models
 {
     public class EgnInfo
     {
         private string egn;
         private string region;
         private string gender;
+        private string birthDate;
 
-        public EgnInfo(string egn, int year, int month, int day, string region, string gender, int birthPosition)
+        public EgnInfo(string egn, string region, string gender, int birthPosition)
         {
             Egn = egn;
-            BirthDate = new DateOnly(year, month, day);
             Region = region;
+            BirthDate = egn;
             Gender = gender;
             BirthPosition = birthPosition;
         }
@@ -34,7 +29,29 @@ namespace EGN.Models
                 egn = value;
             }
         }
-        public DateOnly BirthDate { get; private set; }
+        public string BirthDate
+        {
+            get => birthDate;
+            private set
+            {
+                var year = int.Parse($"19{value.Substring(0, 2)}");
+                var month = int.Parse(value.Substring(2, 2));
+
+                if (month >= 21 && month <= 32)
+                {
+                    month -= 20;
+                    year -= 100;
+                }
+                else if (month >= 41 && month <= 52)
+                {
+                    month -= 40;
+                    year += 100;
+                }
+                var day = int.Parse(value.Substring(4, 2));
+
+                birthDate = new DateOnly(year, month, day).ToString("dddd, dd MMMM yyyy");
+            }
+        }
         public string Region
         {
             get => region;
@@ -64,6 +81,6 @@ namespace EGN.Models
 
         public int BirthPosition { get; private set; }
 
-        public override string ToString() => $"{Egn} е ЕГН на {Gender}, {(Gender == "мъж" ? "роден" : "родена")} на {BirthDate.ToString("dd-MM-yyyy")} в регион {Region}. Преди {(Gender == "мъж" ? "него" : "нея")} в този ден и регион са се родили {BirthPosition} {(Gender == "мъж" ? "момчета" : "момичета")}";
+        public override string ToString() => $"{Egn} е ЕГН на {Gender}, {(Gender == "мъж" ? "роден" : "родена")} в {BirthDate}г. в регион {Region}. Преди {(Gender == "мъж" ? "него" : "нея")} в този ден и регион са се родили {BirthPosition} {(Gender == "мъж" ? "момче/та" : "момиче/та")}";
     }
 }
