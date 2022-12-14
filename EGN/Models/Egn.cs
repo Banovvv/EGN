@@ -1,6 +1,6 @@
 ﻿using EGN.Exceptions;
 using EGN.Interfaces;
-using System.Globalization;
+using EGN.Utils;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -68,7 +68,7 @@ namespace EGN.Models
 
             if (!IsValidBirthPosition(currentCity, birthPosition))
             {
-                throw new IndexOutOfRangeException("Невалидна позиция на раждане!");
+                throw new IndexOutOfRangeException(Constants.InvalidBirthPosition);
             }
 
             if (isMale)
@@ -115,7 +115,7 @@ namespace EGN.Models
 
                 if (!IsValidBirthPosition(currentCity, birthPosition))
                 {
-                    throw new IndexOutOfRangeException("Невалидна позиция на раждане!");
+                    throw new IndexOutOfRangeException(Constants.InvalidBirthPosition);
                 }
 
                 if (isMale)
@@ -191,12 +191,12 @@ namespace EGN.Models
         {
             if (!Validate(egn))
             {
-                throw new ArgumentException("Невалидно ЕГН!");
+                throw new ArgumentException(Constants.InvalidEgn);
             }
 
             var regionInfo = int.Parse(egn.Substring(6, 3));
             var region = _regions.First(x => x.StartValue <= regionInfo && x.EndValue >= regionInfo).Name;
-            var gender = regionInfo % 2 == 0 ? "мъж" : "жена";
+            var gender = regionInfo % 2 == 0 ? Constants.Male : Constants.Female;
 
             var birthPosition = GetBirthPosition(region, regionInfo);
 
