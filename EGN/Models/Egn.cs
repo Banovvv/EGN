@@ -8,50 +8,14 @@ namespace EGN.Models
 {
     public class Egn : IValidator, IGenerator
     {
-        private readonly DateOnly minBirthDate = new DateOnly(1800, 1, 1);
-        private readonly DateOnly maxBirthDate = new DateOnly(2099, 12, 31);
-        private readonly int[] _weights = new int[] { 2, 4, 8, 5, 10, 9, 7, 3, 6 };
-        private readonly IEnumerable<Region> _regions = new List<Region>()
-        {
-            new Region("Благоевград", 0, 43),
-            new Region("Бургас", 44, 93),
-            new Region("Варна", 94, 139),
-            new Region("Велико Търново", 140, 169),
-            new Region("Видин", 170, 183),
-            new Region("Враца", 184, 217),
-            new Region("Габрово", 218, 233),
-            new Region("Кърджали", 234, 281),
-            new Region("Кюстендил", 282, 301),
-            new Region("Ловеч", 302, 319),
-            new Region("Монтана", 320, 341),
-            new Region("Пазарджик", 342, 377),
-            new Region("Перник", 378, 395),
-            new Region("Плевен", 396, 435),
-            new Region("Пловдив", 436, 501),
-            new Region("Разград", 502, 527),
-            new Region("Русе", 528, 555),
-            new Region("Силистра", 556, 575),
-            new Region("Сливен", 576, 601),
-            new Region("Смолян", 602, 623),
-            new Region("София - град", 624, 721),
-            new Region("София - окръг", 722, 751),
-            new Region("Стара Загора", 752, 789),
-            new Region("Добрич", 790, 821),
-            new Region("Търговище", 822, 843),
-            new Region("Хасково", 844, 871),
-            new Region("Шумен", 872, 903),
-            new Region("Ямбол", 904, 925),
-            new Region("Друг", 926, 999)
-        };
-
         public string Generate(DateOnly birthDate, string city, bool isMale, int birthPosition)
         {
-            if (birthDate < minBirthDate || birthDate > maxBirthDate)
+            if (birthDate < Constants.MinBirthDate || birthDate > Constants.MaxBirthDate)
             {
                 throw new InvalidYearException();
             }
 
-            if (_regions.Where(x => x.Name == city).FirstOrDefault() == null)
+            if (Constants.Regions.Where(x => x.Name == city).FirstOrDefault() == null)
             {
                 throw new InvalidCityException(city);
             }
@@ -64,7 +28,7 @@ namespace EGN.Models
 
             egn.Append($"{birthDate.Day:d2}");
 
-            Region currentCity = _regions.Where(x => x.Name == city).First();
+            Region currentCity = Constants.Regions.Where(x => x.Name == city).First();
 
             if (!IsValidBirthPosition(currentCity, birthPosition))
             {
@@ -87,17 +51,17 @@ namespace EGN.Models
 
         public string[] GenerateAll(DateOnly birthDate, string city, bool isMale)
         {
-            if (birthDate < minBirthDate || birthDate > maxBirthDate)
+            if (birthDate < Constants.MinBirthDate || birthDate > Constants.MaxBirthDate)
             {
                 throw new InvalidYearException();
             }
 
-            if (_regions.Where(x => x.Name == city).FirstOrDefault() == null)
+            if (Constants.Regions.Where(x => x.Name == city).FirstOrDefault() == null)
             {
                 throw new InvalidCityException(city);
             }
 
-            Region currentCity = _regions.Where(x => x.Name == city).First();
+            Region currentCity = Constants.Regions.Where(x => x.Name == city).First();
 
             int allocatedBirths = GetNumberOfAllocatedBirths(currentCity);
 
@@ -195,7 +159,7 @@ namespace EGN.Models
             }
 
             var regionInfo = int.Parse(egn.Substring(6, 3));
-            var region = _regions.First(x => x.StartValue <= regionInfo && x.EndValue >= regionInfo).Name;
+            var region = Constants.Regions.First(x => x.StartValue <= regionInfo && x.EndValue >= regionInfo).Name;
             var gender = regionInfo % 2 == 0 ? Constants.Male : Constants.Female;
 
             var birthPosition = GetBirthPosition(region, regionInfo);
@@ -207,7 +171,7 @@ namespace EGN.Models
 
         private int GetBirthPosition(string region, int regionInfo)
         {
-            var currentRegion = _regions.First(x => x.Name == region);
+            var currentRegion = Constants.Regions.First(x => x.Name == region);
 
             if (regionInfo % 2 == 0)
             {
@@ -303,7 +267,7 @@ namespace EGN.Models
             for (int i = 0; i < 9; i++)
             {
                 int currentDigit = int.Parse(currentEgn[i].ToString());
-                sum += currentDigit * _weights[i];
+                sum += currentDigit * Constants.Weights[i];
             }
 
             int remainder = sum % 11;
@@ -318,17 +282,17 @@ namespace EGN.Models
 
         private static void CheckBirthDate(int year, int month, int day)
         {
-            if (year < 1800 || year > 2099)
+            if (year < Constants.MinBirthDate.Year || year > Constants.MaxBirthDate.Year)
             {
                 throw new InvalidYearException();
             }
 
-            if (month < 1 || month > 12)
+            if (month < Constants.MinBirthDate.Month || month > Constants.MaxBirthDate.Month)
             {
                 throw new InvalidMonthException();
             }
 
-            if (day < 1 || day > 31)
+            if (day < Constants.MinBirthDate.Day || day > Constants.MaxBirthDate.Day)
             {
                 throw new InvalidDayException();
             }
@@ -343,7 +307,7 @@ namespace EGN.Models
             {
                 int currentDigit = int.Parse(egn[i].ToString());
 
-                sum += currentDigit * _weights[i];
+                sum += currentDigit * Constants.Weights[i];
             }
 
             int remainder = sum % 11;
