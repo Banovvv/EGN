@@ -4,22 +4,22 @@ namespace EGN.Utils
 {
     public static class Constants
     {
-        public static string EmptyEgnExceptionMessage = "ЕГН не може да е празно!";
-        public static string EmptyCityExceptionMessage = "Градът на раждане не може да е празен!";
-        public static string EmptyGenderExceptionMessage = "Полът не може да е празен!";
-
-        public static string InvalidEgn = "Невалидно ЕГН!";
-        public static string InvalidBirthPosition = "Невалидна позиция на раждане!";
-
-        public static string Male = "мъж";
-        public static string Female = "жена";
-
-
+        public const string EmptyEgnExceptionMessage = "ЕГН не може да е празно!";
+        public const string EmptyCityExceptionMessage = "Градът на раждане не може да е празен!";
+        public const string EmptyGenderExceptionMessage = "Полът не може да е празен!";
+               
+        public const string InvalidEgn = "Невалидно ЕГН!";
+        public const string InvalidBirthPosition = "Невалидна позиция на раждане!";
+               
+        public const string Male = "мъж";
+        public const string Female = "жена";
+               
+               
         public static DateOnly MinBirthDate = new DateOnly(1800, 1, 1);
         public static DateOnly MaxBirthDate = new DateOnly(2099, 12, 31);
-
+               
         public static int[] Weights = new int[] { 2, 4, 8, 5, 10, 9, 7, 3, 6 };
-
+               
         public static IEnumerable<Region> Regions = new List<Region>()
         {
             new Region("Благоевград", 0, 43),
