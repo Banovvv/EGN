@@ -1,4 +1,6 @@
-﻿namespace EGN.Models
+﻿using EGN.Utils;
+
+namespace EGN.Models
 {
     public class EgnInfo
     {
@@ -23,7 +25,7 @@
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    throw new ArgumentException("ЕГН не може да е null");
+                    throw new ArgumentException(Constants.EmptyEgnExceptionMessage);
                 }
 
                 egn = value;
@@ -59,7 +61,7 @@
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    throw new ArgumentException("Градът на раждане не може да е null");
+                    throw new ArgumentException(Constants.EmptyCityExceptionMessage);
                 }
 
                 region = value;
@@ -72,7 +74,7 @@
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    throw new ArgumentException("Полът не може да е null");
+                    throw new ArgumentException(Constants.EmptyGenderExceptionMessage);
                 }
 
                 gender = value;
